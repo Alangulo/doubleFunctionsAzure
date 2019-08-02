@@ -8,16 +8,16 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
-namespace AzureFunctions.Shared
+namespace multipleFunctionAppsTes
 {
-    public static class S_VerifyDeployment
+    public static class Function1
     {
-        [FunctionName("S_VerifyDeployment")]
+        [FunctionName("Function1")]
         public static async Task<IActionResult> Run(
-             [HttpTrigger(AuthorizationLevel.Function, "post", Route = null)] HttpRequest req,
-             ILogger log)
+            [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req,
+            ILogger log)
         {
-            log.LogInformation("S_VerifyDeployment Started.");
+            log.LogInformation("C# HTTP trigger function processed a request.");
 
             string name = req.Query["name"];
 
@@ -26,12 +26,8 @@ namespace AzureFunctions.Shared
             name = name ?? data?.name;
 
             return name != null
-                ? (ActionResult)new OkObjectResult(new { status = "successful" })
-                : new BadRequestObjectResult("Please pass the endpoint invoker name on the query string or in the request body");
+                ? (ActionResult)new OkObjectResult($"Hello, {name}")
+                : new BadRequestObjectResult("Please pass a name on the query string or in the request body");
         }
-
-
     }
-
-
 }
